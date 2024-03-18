@@ -1,0 +1,56 @@
+{
+    "Hummingbird": {
+        "checkpoints": [
+            {
+                "steps": 499968,
+                "file_path": "results\\hb_02\\Hummingbird\\Hummingbird-499968.onnx",
+                "reward": 0.0,
+                "creation_time": 1710717569.4058774,
+                "auxillary_file_paths": [
+                    "results\\hb_02\\Hummingbird\\Hummingbird-499968.pt"
+                ]
+            },
+            {
+                "steps": 999896,
+                "file_path": "results\\hb_02\\Hummingbird\\Hummingbird-999896.onnx",
+                "reward": 0.0,
+                "creation_time": 1710719132.021416,
+                "auxillary_file_paths": [
+                    "results\\hb_02\\Hummingbird\\Hummingbird-999896.pt"
+                ]
+            },
+            {
+                "steps": 1499968,
+                "file_path": "results\\hb_02\\Hummingbird\\Hummingbird-1499968.onnx",
+                "reward": 3.6780340559780598,
+                "creation_time": 1710720632.4915202,
+                "auxillary_file_paths": [
+                    "results\\hb_02\\Hummingbird\\Hummingbird-1499968.pt"
+                ]
+            },
+            {
+                "steps": 1765120,
+                "file_path": "results\\hb_02\\Hummingbird\\Hummingbird-1765120.onnx",
+                "reward": null,
+                "creation_time": 1710721715.2075908,
+                "auxillary_file_paths": [
+                    "results\\hb_02\\Hummingbird\\Hummingbird-1765120.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1765120,
+            "file_path": "results\\hb_02\\Hummingbird.onnx",
+            "reward": null,
+            "creation_time": 1710721715.2075908,
+            "auxillary_file_paths": [
+                "results\\hb_02\\Hummingbird\\Hummingbird-1765120.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.29.0",
+        "torch_version": "1.13.1+cpu"
+    }
+}
