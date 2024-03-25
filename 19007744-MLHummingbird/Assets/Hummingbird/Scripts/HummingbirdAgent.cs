@@ -71,7 +71,7 @@ public class HummingbirdAgent : Agent
     /// </summary>
     public override void OnEpisodeBegin()
     {
-       if(trainingMode)
+       if (trainingMode)
         {
             // only reset flowers in training once
 

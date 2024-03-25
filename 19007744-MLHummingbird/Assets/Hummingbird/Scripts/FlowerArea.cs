@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class FlowerArea : MonoBehaviour
 {
-// The diameter of the area where the agent and flowers can be
+    // The diameter of the area where the agent and flowers can be
     // used for observing relative distance from agent to flower
     public const float AreaDiameter = 20f;
 
