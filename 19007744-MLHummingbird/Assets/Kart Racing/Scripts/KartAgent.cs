@@ -91,9 +91,10 @@ public class KartAgent : Agent
         _rigidbody.velocity = Vector3.zero;
         _rigidbody.angularVelocity = Vector3.zero;
 
-        // Reset to starting position.
+        // TODO: UNCOMMENT OUT WHEN IMPLEMENTATION OF START POSITION IS CREATED!
+        /*// Reset to starting position.
         transform.position = _raceTrack.StartPosition.position;
-        transform.rotation = _raceTrack.StartPosition.rotation;
+        transform.rotation = _raceTrack.StartPosition.rotation;*/
     }
 
     /// <summary>
