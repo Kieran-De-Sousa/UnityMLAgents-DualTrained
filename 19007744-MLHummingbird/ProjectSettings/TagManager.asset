@@ -9,6 +9,7 @@ TagManager:
   - boundary
   - track_piece
   - checkpoint
+  - wall
   layers:
   - Default
   - TransparentFX

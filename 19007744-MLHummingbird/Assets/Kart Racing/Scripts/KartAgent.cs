@@ -31,6 +31,9 @@ public class KartAgent : Agent
     // Whether the agent is frozen (intentionally not moving)
     private bool _frozen = false;
 
+    // The agent's current reward for debugging.
+    private float _currentReward = 0f;
+
     /// <summary>
     /// The number of checkpoints the agent has reached this episode.
     /// </summary>
@@ -97,6 +100,7 @@ public class KartAgent : Agent
         // Reset number of checkpoints reached.
         CheckpointsReached = 0;
         CheckpointsValue = 0f;
+        _currentReward = 0f;
 
         // Reset all movement.
         _rigidbody.velocity = Vector3.zero;
@@ -290,6 +294,8 @@ public class KartAgent : Agent
                     AddReward(CheckpointsValue * CheckpointsReached);
                 }
 
+                _currentReward += CheckpointsValue * CheckpointsReached;
+
                 if (track.HasHitCheckpoint)
                 {
                     UpdateNearestCheckpoint();
@@ -304,11 +310,16 @@ public class KartAgent : Agent
     /// <param name="other">The collision info.</param>
     private void OnCollisionEnter(Collision other)
     {
-        // TODO: Logic for removing rewards due to hitting walls, etc.
-        if (trainingMode) // && collision.collider.CompareTag("boundary")
+        if (trainingMode && other.collider.CompareTag("wall"))
         {
             // Collided with the walls of track, give a negative reward.
-            //AddReward(-0.5f);
+            AddReward(-0.5f);
+        }
+
+        if (other.collider.CompareTag("wall"))
+        {
+            _currentReward -= 0.5f;
+
         }
     }
 }

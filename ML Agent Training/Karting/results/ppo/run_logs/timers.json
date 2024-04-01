@@ -1,0 +1,42 @@
+{
+    "name": "root",
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1711992507",
+        "python_version": "3.7.16 (default, Jan 17 2023, 16:06:28) [MSC v.1916 64 bit (AMD64)]",
+        "command_line_arguments": "C:\\Users\\kdsge\\anaconda3\\envs\\ML-Hummingbird\\Scripts\\mlagents-learn",
+        "mlagents_version": "0.29.0",
+        "mlagents_envs_version": "0.29.0",
+        "communication_protocol_version": "1.5.0",
+        "pytorch_version": "1.13.1+cpu",
+        "numpy_version": "1.21.2",
+        "end_time_seconds": "1711992586"
+    },
+    "total": 78.0344432,
+    "count": 1,
+    "self": 0.021454300000002036,
+    "children": {
+        "run_training.setup": {
+            "total": 0.4106223,
+            "count": 1,
+            "self": 0.4106223
+        },
+        "TrainerController.start_learning": {
+            "total": 77.6023666,
+            "count": 1,
+            "self": 0.000510999999988826,
+            "children": {
+                "TrainerController._reset_env": {
+                    "total": 77.601832,
+                    "count": 1,
+                    "self": 77.601832
+                },
+                "TrainerController._save_models": {
+                    "total": 2.360000000578566e-05,
+                    "count": 1,
+                    "self": 2.360000000578566e-05
+                }
+            }
+        }
+    }
+}

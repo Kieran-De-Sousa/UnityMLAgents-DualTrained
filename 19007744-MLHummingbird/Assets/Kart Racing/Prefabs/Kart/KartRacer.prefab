@@ -328,7 +328,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 4
+    VectorObservationSize: 9
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 2
@@ -339,7 +339,7 @@ MonoBehaviour:
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 1
-  m_BehaviorType: 1
+  m_BehaviorType: 0
   m_BehaviorName: Kart
   TeamId: 0
   m_UseChildSensors: 1
@@ -381,7 +381,7 @@ MonoBehaviour:
   drag: 0.5
   kartTip: {fileID: 3395869997217148757}
   agentCamera: {fileID: 7614060530734647952}
-  trainingMode: 0
+  trainingMode: 1
 --- !u!1001 &3529512040148180972
 PrefabInstance:
   m_ObjectHideFlags: 0
