@@ -12,6 +12,8 @@ public class KartAgent : Agent
     public float acceleration = 2.0f;
     public float steeringStrength = 3.0f;
     public float drag = 0.5f;
+    [Tooltip("The front tip of the kart.")]
+    public Transform kartTip;
 
     [Space]
 
@@ -32,7 +34,12 @@ public class KartAgent : Agent
     /// <summary>
     /// The number of checkpoints the agent has reached this episode.
     /// </summary>
-    public float CheckpointsReached { get; private set; }
+    public int CheckpointsReached { get; private set; }
+
+    /// <summary>
+    /// The value of the checkpoints the agent has reached this episode.
+    /// </summary>
+    public float CheckpointsValue { get; private set; }
 
     private void Start()
     {
@@ -44,7 +51,11 @@ public class KartAgent : Agent
     /// </summary>
     private void Update()
     {
-        throw new NotImplementedException();
+        // Draw a line from the kart tip to the nearest checkpoint.
+        if (_nearestTrackPiece != null)
+        {
+            Debug.DrawLine(kartTip.position, _nearestTrackPiece.CheckpointCentrePosition, Color.green);
+        }
     }
 
     /// <summary>
@@ -52,7 +63,6 @@ public class KartAgent : Agent
     /// </summary>
     private void FixedUpdate()
     {
-        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -85,16 +95,18 @@ public class KartAgent : Agent
         // Reset the race track.
         _raceTrack.ResetRaceTrack();
         // Reset number of checkpoints reached.
-        CheckpointsReached = 0f;
+        CheckpointsReached = 0;
+        CheckpointsValue = 0f;
 
         // Reset all movement.
         _rigidbody.velocity = Vector3.zero;
         _rigidbody.angularVelocity = Vector3.zero;
 
-        // TODO: UNCOMMENT OUT WHEN IMPLEMENTATION OF START POSITION IS CREATED!
-        /*// Reset to starting position.
+        // Reset to starting position.
         transform.position = _raceTrack.StartPosition.position;
-        transform.rotation = _raceTrack.StartPosition.rotation;*/
+        transform.rotation = _raceTrack.StartPosition.rotation;
+
+        UpdateNearestCheckpoint();
     }
 
     /// <summary>
@@ -137,6 +149,35 @@ public class KartAgent : Agent
     public override void CollectObservations(VectorSensor sensor)
     {
         // TODO: Need 10 OBSERVATIONS TO MATCH HUMMINGBIRD
+        // TODO: CURRENTLY [9]
+
+        // If _nearestTrackPiece is null, observe an empty array and return early.
+        if (_nearestTrackPiece == null)
+        {
+            // TODO: Change this to 10 when 10 observations are made.
+            sensor.AddObservation(new float[9]);
+            return;
+        }
+
+        // (4 observations)
+        // Observe the agent's local rotation.
+        sensor.AddObservation(transform.localRotation.normalized);
+
+        Vector3 toCheckpoint = _nearestTrackPiece.CheckpointCentrePosition - kartTip.position;
+
+        // (3 observations)
+        // Observe a normalized vector pointing to the nearest checkpoint.
+        sensor.AddObservation(toCheckpoint.normalized);
+
+        // (1 observation)
+        // Observe a dot product that indicates whether the kart tip is in front of the checkpoint.
+        // (+1 means that the kart tip is directly in front of the checkpoint, -1 means directly behind)
+        sensor.AddObservation(Vector3.Dot(toCheckpoint.normalized, -_nearestTrackPiece.CheckpointForwardVector.normalized));
+
+        // (1 observation)
+        // Observe a dot product that indicates whether the kart is pointing toward the checkpoint.
+        // (+1 means that the kart is pointing directly at the checkpoint, -1 means directly away)
+        sensor.AddObservation(Vector3.Dot(kartTip.forward.normalized, -_nearestTrackPiece.CheckpointForwardVector.normalized));
     }
 
     /// <summary>
@@ -148,6 +189,7 @@ public class KartAgent : Agent
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         // TODO: Need 5 CONTINUOUS ACTIONS TO MATCH HUMMINGBIRD
+        // TODO: CURRENTLY [2]
 
         // Create placeholders for all movement/turning
         Vector3 forward = Vector3.zero;
@@ -157,8 +199,8 @@ public class KartAgent : Agent
         // All values should be between -1 and +1
 
         // Forward/backward
-        if (Input.GetKey(KeyCode.W)) forward = transform.forward;
-        else if (Input.GetKey(KeyCode.S)) forward = -transform.forward;
+        if (Input.GetKey(KeyCode.W)) forward = transform.forward; // Move forward
+        else if (Input.GetKey(KeyCode.S)) forward = -transform.forward; // Move backward
 
         // Turn left/right
         if (Input.GetKey(KeyCode.A)) turnInput.y = -1f; // Turn left
@@ -193,6 +235,80 @@ public class KartAgent : Agent
 
     private void UpdateNearestCheckpoint()
     {
+        foreach (Track track in _raceTrack.Tracks)
+        {
+            if (_nearestTrackPiece == null && !track.HasHitCheckpoint)
+            {
+                // No current nearest track piece and this checkpoint has not been hit, so set this as next target.
+                _nearestTrackPiece = track;
+            }
+            else if (!track.HasHitCheckpoint)
+            {
+                // Calculate distance to this flower and distance to the current nearest flower
+                float distanceToCheckpoint = Vector3.Distance(track.transform.position, kartTip.position);
+                float distanceToCurrentNearestCheckpoint = Vector3.Distance(_nearestTrackPiece.transform.position, kartTip.position);
 
+                // If current nearest flower is empty OR this flower is closer, update the nearest flower
+                if (_nearestTrackPiece.HasHitCheckpoint || distanceToCheckpoint < distanceToCurrentNearestCheckpoint)
+                {
+                    _nearestTrackPiece = track;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Called when the agent's collider enters a trigger collider.
+    /// </summary>
+    /// <param name="other">The trigger collider.</param>
+    private void OnTriggerEnter(Collider other)
+    {
+        // Check if agent has collided with checkpoint.
+        if (other.CompareTag("checkpoint"))
+        {
+            // Look up the track piece from this checkpoint collider.
+            Track track = _raceTrack.GetTrackPieceFromCheckpointCollider(other);
+
+            // Check if we have hit this checkpoint.
+            if (!track.HasHitCheckpoint)
+            {
+                // Increment number of checkpoints hit by 1.
+                CheckpointsReached += 1;
+
+                // Attempt to reward agent for hitting a checkpoint.
+                float checkpointValue = track.CheckpointReached();
+
+                // Keep track of checkpoint value reached.
+                CheckpointsValue += checkpointValue;
+
+                if (trainingMode)
+                {
+                    // Calculate reward for hitting a checkpoint
+                    // TODO: HIGHER REWARD FOR HIGHER FORWARD SPEED!
+
+                    // Add reward by multiplying number of checkpoints reached by the value of all checkpoints combined.
+                    AddReward(CheckpointsValue * CheckpointsReached);
+                }
+
+                if (track.HasHitCheckpoint)
+                {
+                    UpdateNearestCheckpoint();
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Called when the agent collides with something solid.
+    /// </summary>
+    /// <param name="other">The collision info.</param>
+    private void OnCollisionEnter(Collision other)
+    {
+        // TODO: Logic for removing rewards due to hitting walls, etc.
+        if (trainingMode) // && collision.collider.CompareTag("boundary")
+        {
+            // Collided with the walls of track, give a negative reward.
+            //AddReward(-0.5f);
+        }
     }
 }

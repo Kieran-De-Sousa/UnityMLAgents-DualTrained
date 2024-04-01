@@ -29,6 +29,7 @@ public class RaceTrack : MonoBehaviour
         trackPieces = new List<GameObject>();
         checkpointTrackDictionary = new Dictionary<Collider, Track>();
         Tracks = new List<Track>();
+        StartPosition = transform.Find(SPAWN).GetComponent<Transform>();
 
         FindChildTrackPieces(transform);
     }

@@ -8,6 +8,7 @@ TagManager:
   - nectar
   - boundary
   - track_piece
+  - checkpoint
   layers:
   - Default
   - TransparentFX

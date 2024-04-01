@@ -365,7 +365,7 @@ public class HummingbirdAgent : Agent
     }
 
     /// <summary>
-    /// Handles when the agen'ts collider enters or stays in a trigger collider
+    /// Handles when the agent's collider enters or stays in a trigger collider
     /// </summary>
     /// <param name="collider">The trigger collider</param>
     private void TriggerEnterOrStay(Collider collider)

@@ -14,7 +14,7 @@ public class Track : MonoBehaviour
     [Tooltip("Whether the checkpoint has been hit or not.")]
     public bool checkpointTriggered = false;
     [Tooltip("The reward to be given for hitting the checkpoint.")]
-    public float checkpointValue = 1.0f;
+    public float checkpointValue = 0.1f;
 
     /// <summary>
     /// A vector pointing forward from the checkpoint.
@@ -24,7 +24,7 @@ public class Track : MonoBehaviour
     /// <summary>
     /// The centre position of the checkpoint collider.
     /// </summary>
-    public Vector3 CheckpointCentrePosition => checkpointCollider.transform.position;
+    public Vector3 CheckpointCentrePosition => checkpointCollider.bounds.center;
 
     public bool HasHitCheckpoint => checkpointTriggered;
 

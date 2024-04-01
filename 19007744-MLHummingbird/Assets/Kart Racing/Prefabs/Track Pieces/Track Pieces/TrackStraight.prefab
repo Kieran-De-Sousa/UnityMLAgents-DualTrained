@@ -206,6 +206,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   checkpointCollider: {fileID: 7101286404693122009}
   checkpointTriggered: 0
+  checkpointValue: 1
 --- !u!1 &7241079518663135045
 GameObject:
   m_ObjectHideFlags: 0
@@ -218,7 +219,7 @@ GameObject:
   - component: {fileID: 7101286404693122009}
   m_Layer: 0
   m_Name: CheckpointCollider
-  m_TagString: Untagged
+  m_TagString: checkpoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
