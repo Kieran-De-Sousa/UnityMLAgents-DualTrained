@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine;
 
 /// <summary>
@@ -11,12 +8,13 @@ public class Track : MonoBehaviour
     // The name of the checkpoint collider in the Unity Hierarchy.
     private static readonly string CHECKPOINT_COLLIDER = "CheckpointCollider";
 
-    /// <summary>
-    /// The trigger collider representing the checkpoint.
-    /// </summary>
+    [Header("Checkpoints")]
+    [Tooltip("The trigger collider representing the checkpoint.")]
     public Collider checkpointCollider;
-
+    [Tooltip("Whether the checkpoint has been hit or not.")]
     public bool checkpointTriggered = false;
+    [Tooltip("The reward to be given for hitting the checkpoint.")]
+    public float checkpointValue = 1.0f;
 
     /// <summary>
     /// A vector pointing forward from the checkpoint.
@@ -41,9 +39,22 @@ public class Track : MonoBehaviour
         checkpointCollider = transform.Find(CHECKPOINT_COLLIDER).GetComponent<Collider>();
     }
 
-    public void CheckpointReached()
+    /// <summary>
+    /// Attempts to reward checkpoint hit completion.
+    /// </summary>
+    /// <returns>The value for hitting a checkpoint.</returns>
+    public float CheckpointReached()
     {
+        if (!HasHitCheckpoint)
+        {
+            // Turn off checkpoint collider and set triggered state.
+            checkpointTriggered = true;
+            checkpointCollider.enabled = false;
 
+            return checkpointValue;
+        }
+
+        return 0;
     }
 
     /// <summary>
