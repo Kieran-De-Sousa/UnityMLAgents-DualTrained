@@ -44,7 +44,7 @@ public class FlowerArea : MonoBehaviour
     }
 
     /// <summary>
-    /// Gets the <see cref="Flower"/> that a nectar collider belongs to
+    /// Gets the <see cref="Flower"/> that a nectar collider belongs to.
     /// </summary>
     /// <param name="collider">The nectar collider</param>
     /// <returns>The matching flower</returns>

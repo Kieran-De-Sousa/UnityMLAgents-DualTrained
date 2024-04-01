@@ -8,6 +8,8 @@ using UnityEngine;
 /// </summary>
 public class Track : MonoBehaviour
 {
+    // The name of the checkpoint collider in the Unity Hierarchy.
+    private static readonly string CHECKPOINT_COLLIDER = "CheckpointCollider";
 
     /// <summary>
     /// The trigger collider representing the checkpoint.
@@ -16,6 +18,18 @@ public class Track : MonoBehaviour
 
     public bool checkpointTriggered = false;
 
+    /// <summary>
+    /// A vector pointing forward from the checkpoint.
+    /// </summary>
+    public Vector3 CheckpointForwardVector => checkpointCollider.transform.forward;
+
+    /// <summary>
+    /// The centre position of the checkpoint collider.
+    /// </summary>
+    public Vector3 CheckpointCentrePosition => checkpointCollider.transform.position;
+
+    public bool HasHitCheckpoint => checkpointTriggered;
+
 
     // ------------------------ Class Methods ------------------------ //
     /// <summary>
@@ -23,7 +37,8 @@ public class Track : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-
+        // Find checkpoint collider.
+        checkpointCollider = transform.Find(CHECKPOINT_COLLIDER).GetComponent<Collider>();
     }
 
     public void CheckpointReached()

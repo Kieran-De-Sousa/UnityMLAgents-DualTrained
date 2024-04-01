@@ -8,14 +8,16 @@ using UnityEngine;
 /// </summary>
 public class RaceTrack : MonoBehaviour
 {
-    [Header("Start Position")]
     private static readonly string SPAWN = "SpawnPosition";
-    public Transform StartPosition { get; private set; }
+    private static readonly string TRACK_PIECE = "track_piece";
 
+    // Start position of the racer
+    public Transform StartPosition { get; private set; }
     // The list of all track pieces in this Track.
     private List<GameObject> trackPieces;
     // A lookup dictionary for looking up a track from a checkpoint collider
     private Dictionary<Collider, Track> checkpointTrackDictionary;
+
     /// <summary>
     /// The list of all tracks in the race track.
     /// </summary>
@@ -33,39 +35,40 @@ public class RaceTrack : MonoBehaviour
 
     private void FindChildTrackPieces(Transform parent)
     {
-        for (int i = 0; i < parent.childCount; i++)
+        for (int i = 0; i < parent.childCount; ++i)
         {
             Transform child = parent.GetChild(i);
 
-            if (child.CompareTag("flower_plant"))
+            if (child.CompareTag(TRACK_PIECE))
             {
-                // Found a track piece, add it to the flowerPlants list
+                // Found a track piece, add it to the trackPieces list.
                 trackPieces.Add(child.gameObject);
 
-                // Look for flowers within the flower plant
-                FindChildTrackPieces(child);
-            }
-            else
-            {
-                // Not a flower plant, look for a Flower component
+                // Look for track component in track piece.
                 Track track = child.GetComponent<Track>();
+
                 if (track != null)
                 {
                     // Found a track, add it to the track list
                     Tracks.Add(track);
 
-                    // Add the nectar collider to the lookup dictionary
+                    // Add the checkpoint collider to the lookup dictionary
                     checkpointTrackDictionary.Add(track.checkpointCollider, track);
 
-                    // Note: there are no track that are children of other track
-                }
-                else
-                {
-                    // Flower component not found, so check children
-                    FindChildTrackPieces(child);
+                    // Note: there are no track that are children of other track.
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Gets the <see cref="Track"/> that a checkpoint collider belongs to.
+    /// </summary>
+    /// <param name="collider">The checkpoint collider.</param>
+    /// <returns>The matching track piece.</returns>
+    public Track GetTrackPieceFromCheckpointCollider(Collider collider)
+    {
+        return checkpointTrackDictionary[collider];
     }
 
     /// <summary>
@@ -73,7 +76,6 @@ public class RaceTrack : MonoBehaviour
     /// </summary>
     public void ResetRaceTrack()
     {
-
         // Reset each track piece.
         foreach (var track in Tracks)
         {
