@@ -1169,6 +1169,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1292817627552328570, guid: 0fcddd489715bec4b985cc406437fbb6,
         type: 3}
+      propertyPath: m_BehaviorType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1292817627552328570, guid: 0fcddd489715bec4b985cc406437fbb6,
+        type: 3}
       propertyPath: m_BrainParameters.VectorObservationSize
       value: 9
       objectReference: {fileID: 0}
@@ -1226,6 +1231,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5727011280733951283, guid: 0fcddd489715bec4b985cc406437fbb6,
+        type: 3}
+      propertyPath: trainingMode
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
