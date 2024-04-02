@@ -208,7 +208,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   checkpointCollider: {fileID: 7101286404693122009}
   checkpointTriggered: 0
-  checkpointValue: 0.1
+  checkpointValue: 1
 --- !u!1 &5730861621823482015
 GameObject:
   m_ObjectHideFlags: 0
