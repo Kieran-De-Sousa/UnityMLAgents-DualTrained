@@ -34,10 +34,16 @@ public class KartAgent : Agent
     // The agent's current reward for debugging.
     private float _currentReward = 0f;
 
+    // The agent's current checkpoint on the race track (Resets with new lap).
+    private int _currentCheckpoint = 0;
+
+    // The agent's current lap count.
+    private int _lapsComplete = 0;
+
     /// <summary>
     /// The number of checkpoints the agent has reached this episode.
     /// </summary>
-    public int CheckpointsReached { get; private set; }
+    public int TotalCheckpointsReached { get; private set; }
 
     /// <summary>
     /// The value of the checkpoints the agent has reached this episode.
@@ -97,18 +103,8 @@ public class KartAgent : Agent
 
         // Reset the race track.
         _raceTrack.ResetRaceTrack();
-        // Reset number of checkpoints reached.
-        CheckpointsReached = 0;
-        CheckpointsValue = 0f;
-        _currentReward = 0f;
-
-        // Reset all movement.
-        _rigidbody.velocity = Vector3.zero;
-        _rigidbody.angularVelocity = Vector3.zero;
-
-        // Reset to starting position.
-        transform.position = _raceTrack.StartPosition.position;
-        transform.rotation = _raceTrack.StartPosition.rotation;
+        // Reset the agent
+        ResetRacer();
 
         UpdateNearestCheckpoint();
     }
@@ -237,9 +233,30 @@ public class KartAgent : Agent
         _rigidbody.WakeUp();
     }
 
+    private void ResetRacer()
+    {
+        // Reset number of checkpoints reached and value.
+        TotalCheckpointsReached = 0;
+        CheckpointsValue = 0f;
+
+        // Private tracking variables.
+        _currentCheckpoint = 0;
+        _currentReward = 0f;
+        _lapsComplete = 0;
+
+        // Reset all movement.
+        _rigidbody.velocity = Vector3.zero;
+        _rigidbody.angularVelocity = Vector3.zero;
+
+        // Reset to starting position.
+        transform.position = _raceTrack.StartPosition.position;
+        transform.rotation = _raceTrack.StartPosition.rotation;
+    }
+
     private void UpdateNearestCheckpoint()
     {
-        foreach (Track track in _raceTrack.Tracks)
+        // NOTE: OLD IMPLEMENTATION
+        /*foreach (Track track in _raceTrack.Tracks)
         {
             if (_nearestTrackPiece == null && !track.HasHitCheckpoint)
             {
@@ -258,7 +275,10 @@ public class KartAgent : Agent
                     _nearestTrackPiece = track;
                 }
             }
-        }
+        }*/
+
+        // NOTE: NEW IMPLEMENTATION
+        _nearestTrackPiece = _raceTrack.Tracks[_currentCheckpoint];
     }
 
     /// <summary>
@@ -273,33 +293,47 @@ public class KartAgent : Agent
             // Look up the track piece from this checkpoint collider.
             Track track = _raceTrack.GetTrackPieceFromCheckpointCollider(other);
 
-            // Check if we have hit this checkpoint.
-            if (!track.HasHitCheckpoint)
+            // Check if we have hit this checkpoint already, and if this is the next checkpoint.
+            if (!track.HasHitCheckpoint && _nearestTrackPiece == track)
             {
-                // Increment number of checkpoints hit by 1.
-                CheckpointsReached += 1;
+                // Increment total number of checkpoints hit by 1.
+                TotalCheckpointsReached += 1;
 
                 // Attempt to reward agent for hitting a checkpoint.
                 float checkpointValue = track.CheckpointReached();
 
                 // Keep track of checkpoint value reached.
                 CheckpointsValue += checkpointValue;
+                _currentReward += CheckpointsValue * TotalCheckpointsReached;
 
+                // Reward the agent for training mode.
                 if (trainingMode)
                 {
                     // Calculate reward for hitting a checkpoint
                     // TODO: HIGHER REWARD FOR HIGHER FORWARD SPEED!
 
                     // Add reward by multiplying number of checkpoints reached by the value of all checkpoints combined.
-                    AddReward(CheckpointsValue * CheckpointsReached);
+                    AddReward(CheckpointsValue * TotalCheckpointsReached);
                 }
 
-                _currentReward += CheckpointsValue * CheckpointsReached;
-
-                if (track.HasHitCheckpoint)
+                if (_currentCheckpoint >= _raceTrack.Tracks.Count - 1)
                 {
-                    UpdateNearestCheckpoint();
+                    _currentCheckpoint = 0;
+                    _lapsComplete += 1;
+                    _raceTrack.CompletedLap();
                 }
+                else
+                {
+                    _currentCheckpoint += 1;
+                }
+
+                UpdateNearestCheckpoint();
+            }
+
+            else if (!track.HasHitCheckpoint && _nearestTrackPiece != track)
+            {
+                // Punish the agent heavily for hitting a checkpoint that was not the next one.
+                AddReward(-5.0f);
             }
         }
     }
@@ -319,7 +353,6 @@ public class KartAgent : Agent
         if (other.collider.CompareTag("wall"))
         {
             _currentReward -= 0.5f;
-
         }
     }
 }

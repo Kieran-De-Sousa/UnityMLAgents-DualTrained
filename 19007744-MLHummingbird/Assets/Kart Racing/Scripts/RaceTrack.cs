@@ -11,24 +11,27 @@ public class RaceTrack : MonoBehaviour
     private static readonly string SPAWN = "SpawnPosition";
     private static readonly string TRACK_PIECE = "track_piece";
 
-    // Start position of the racer
+    // Start position of the racer.
     public Transform StartPosition { get; private set; }
-    // The list of all track pieces in this Track.
-    private List<GameObject> trackPieces;
-    // A lookup dictionary for looking up a track from a checkpoint collider
-    private Dictionary<Collider, Track> checkpointTrackDictionary;
 
     /// <summary>
     /// The list of all tracks in the race track.
     /// </summary>
-    public List<Track> Tracks { get; private set; }
+    public List<Track> Tracks;
+
+    // Number of laps to complete the track.
+    public int TotalLaps = 3;
+
+    // The list of all track pieces in this Track.
+    private List<GameObject> trackPieces;
+    // A lookup dictionary for looking up a track from a checkpoint collider
+    private Dictionary<Collider, Track> checkpointTrackDictionary;
 
     private void Awake()
     {
         // Initialize variables
         trackPieces = new List<GameObject>();
         checkpointTrackDictionary = new Dictionary<Collider, Track>();
-        Tracks = new List<Track>();
         StartPosition = transform.Find(SPAWN).GetComponent<Transform>();
 
         FindChildTrackPieces(transform);
@@ -36,7 +39,8 @@ public class RaceTrack : MonoBehaviour
 
     private void FindChildTrackPieces(Transform parent)
     {
-        for (int i = 0; i < parent.childCount; ++i)
+        // NOTE: OLD IMPLEMENTATION
+        /*for (int i = 0; i < parent.childCount; ++i)
         {
             Transform child = parent.GetChild(i);
 
@@ -59,6 +63,13 @@ public class RaceTrack : MonoBehaviour
                     // Note: there are no track that are children of other track.
                 }
             }
+        }*/
+
+        // NOTE: NEW IMPLEMENTATION
+        foreach (Track track in Tracks)
+        {
+            // Add the checkpoint collider to the lookup dictionary
+            checkpointTrackDictionary.Add(track.checkpointCollider, track);
         }
     }
 
@@ -70,6 +81,16 @@ public class RaceTrack : MonoBehaviour
     public Track GetTrackPieceFromCheckpointCollider(Collider collider)
     {
         return checkpointTrackDictionary[collider];
+    }
+
+    public void CompletedLap()
+    {
+        ResetRaceTrack();
+    }
+
+    public void CompletedTrack()
+    {
+
     }
 
     /// <summary>
