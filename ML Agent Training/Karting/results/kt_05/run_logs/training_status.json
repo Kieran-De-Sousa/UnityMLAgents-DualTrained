@@ -1,0 +1,56 @@
+{
+    "Kart": {
+        "checkpoints": [
+            {
+                "steps": 499896,
+                "file_path": "results\\kt_05\\Kart\\Kart-499896.onnx",
+                "reward": 3.1578947368421053,
+                "creation_time": 1712943917.4225595,
+                "auxillary_file_paths": [
+                    "results\\kt_05\\Kart\\Kart-499896.pt"
+                ]
+            },
+            {
+                "steps": 999896,
+                "file_path": "results\\kt_05\\Kart\\Kart-999896.onnx",
+                "reward": 18.555555555555557,
+                "creation_time": 1712944809.1315598,
+                "auxillary_file_paths": [
+                    "results\\kt_05\\Kart\\Kart-999896.pt"
+                ]
+            },
+            {
+                "steps": 1499896,
+                "file_path": "results\\kt_05\\Kart\\Kart-1499896.onnx",
+                "reward": 139.6578947368421,
+                "creation_time": 1712945702.1060567,
+                "auxillary_file_paths": [
+                    "results\\kt_05\\Kart\\Kart-1499896.pt"
+                ]
+            },
+            {
+                "steps": 1960000,
+                "file_path": "results\\kt_05\\Kart\\Kart-1960000.onnx",
+                "reward": 63293.0,
+                "creation_time": 1712946969.6864653,
+                "auxillary_file_paths": [
+                    "results\\kt_05\\Kart\\Kart-1960000.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1960000,
+            "file_path": "results\\kt_05\\Kart.onnx",
+            "reward": 63293.0,
+            "creation_time": 1712946969.6864653,
+            "auxillary_file_paths": [
+                "results\\kt_05\\Kart\\Kart-1960000.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.29.0",
+        "torch_version": "1.13.1+cpu"
+    }
+}

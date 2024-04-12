@@ -334,6 +334,7 @@ public class KartAgent : Agent
             {
                 // Punish the agent heavily for hitting a checkpoint that was not the next one.
                 AddReward(-5.0f);
+                _currentReward -= 5.0f;
             }
         }
     }
@@ -344,15 +345,16 @@ public class KartAgent : Agent
     /// <param name="other">The collision info.</param>
     private void OnCollisionEnter(Collision other)
     {
-        if (trainingMode && other.collider.CompareTag("wall"))
-        {
-            // Collided with the walls of track, give a negative reward.
-            AddReward(-0.5f);
-        }
-
         if (other.collider.CompareTag("wall"))
         {
+            // Collided with the walls of track, give a negative reward.
             _currentReward -= 0.5f;
+
+            if (trainingMode)
+            {
+                // Collided with the walls of track, give a negative reward.
+                AddReward(-0.5f);
+            }
         }
     }
 }
