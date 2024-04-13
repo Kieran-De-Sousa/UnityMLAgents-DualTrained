@@ -117,7 +117,7 @@ public class HummingbirdAgent : Agent
     ///
     public override void OnActionReceived(ActionBuffers actions)
     {
-                // Don't take actions if frozen
+        // Don't take actions if frozen
         if (frozen) return;
 
         // Calculate movement vector

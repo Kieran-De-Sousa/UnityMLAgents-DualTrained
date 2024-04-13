@@ -68,13 +68,6 @@ public class KartAgent : Agent
     }
 
     /// <summary>
-    /// Called every .02 seconds
-    /// </summary>
-    private void FixedUpdate()
-    {
-    }
-
-    /// <summary>
     /// Initialize the agent
     /// </summary>
     public override void Initialize()
@@ -143,19 +136,15 @@ public class KartAgent : Agent
     }
 
     /// <summary>
-    /// Collect vector observations from the environment
+    /// Collect vector observations from the environment.
     /// </summary>
     /// <param name="sensor">The vector sensor</param>
     public override void CollectObservations(VectorSensor sensor)
     {
-        // TODO: Need 10 OBSERVATIONS TO MATCH HUMMINGBIRD
-        // TODO: CURRENTLY [9]
-
         // If _nearestTrackPiece is null, observe an empty array and return early.
         if (_nearestTrackPiece == null)
         {
-            // TODO: Change this to 10 when 10 observations are made.
-            sensor.AddObservation(new float[9]);
+            sensor.AddObservation(new float[10]);
             return;
         }
 
@@ -178,6 +167,11 @@ public class KartAgent : Agent
         // Observe a dot product that indicates whether the kart is pointing toward the checkpoint.
         // (+1 means that the kart is pointing directly at the checkpoint, -1 means directly away)
         sensor.AddObservation(Vector3.Dot(kartTip.forward.normalized, -_nearestTrackPiece.CheckpointForwardVector.normalized));
+
+        // NOTE: UNCOMMENT OUT WHEN RETRAINING
+        // (1 observation)
+        // Observe the relative distance from the kart tip to the checkpoint.
+        sensor.AddObservation(toCheckpoint.magnitude / _raceTrack.TrackDiameter);
     }
 
     /// <summary>
@@ -255,29 +249,6 @@ public class KartAgent : Agent
 
     private void UpdateNearestCheckpoint()
     {
-        // NOTE: OLD IMPLEMENTATION
-        /*foreach (Track track in _raceTrack.Tracks)
-        {
-            if (_nearestTrackPiece == null && !track.HasHitCheckpoint)
-            {
-                // No current nearest track piece and this checkpoint has not been hit, so set this as next target.
-                _nearestTrackPiece = track;
-            }
-            else if (!track.HasHitCheckpoint)
-            {
-                // Calculate distance to this flower and distance to the current nearest flower
-                float distanceToCheckpoint = Vector3.Distance(track.transform.position, kartTip.position);
-                float distanceToCurrentNearestCheckpoint = Vector3.Distance(_nearestTrackPiece.transform.position, kartTip.position);
-
-                // If current nearest flower is empty OR this flower is closer, update the nearest flower
-                if (_nearestTrackPiece.HasHitCheckpoint || distanceToCheckpoint < distanceToCurrentNearestCheckpoint)
-                {
-                    _nearestTrackPiece = track;
-                }
-            }
-        }*/
-
-        // NOTE: NEW IMPLEMENTATION
         _nearestTrackPiece = _raceTrack.Tracks[_currentCheckpoint];
     }
 

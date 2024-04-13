@@ -22,6 +22,10 @@ public class RaceTrack : MonoBehaviour
     // Number of laps to complete the track.
     public int TotalLaps = 3;
 
+    // The diameter of the race track where the agent and the track pieces will be,
+    // used for observing the relative distance from an agent to a checkpoint.
+    public float TrackDiameter { get; private set; }
+
     // The list of all track pieces in this Track.
     private List<GameObject> trackPieces;
     // A lookup dictionary for looking up a track from a checkpoint collider
@@ -33,44 +37,44 @@ public class RaceTrack : MonoBehaviour
         trackPieces = new List<GameObject>();
         checkpointTrackDictionary = new Dictionary<Collider, Track>();
         StartPosition = transform.Find(SPAWN).GetComponent<Transform>();
+        TrackDiameter = CalculateTrackDiameter();
 
-        FindChildTrackPieces(transform);
+        FindChildTrackPieces();
     }
 
-    private void FindChildTrackPieces(Transform parent)
+    private void FindChildTrackPieces()
     {
-        // NOTE: OLD IMPLEMENTATION
-        /*for (int i = 0; i < parent.childCount; ++i)
-        {
-            Transform child = parent.GetChild(i);
-
-            if (child.CompareTag(TRACK_PIECE))
-            {
-                // Found a track piece, add it to the trackPieces list.
-                trackPieces.Add(child.gameObject);
-
-                // Look for track component in track piece.
-                Track track = child.GetComponent<Track>();
-
-                if (track != null)
-                {
-                    // Found a track, add it to the track list
-                    Tracks.Add(track);
-
-                    // Add the checkpoint collider to the lookup dictionary
-                    checkpointTrackDictionary.Add(track.checkpointCollider, track);
-
-                    // Note: there are no track that are children of other track.
-                }
-            }
-        }*/
-
-        // NOTE: NEW IMPLEMENTATION
         foreach (Track track in Tracks)
         {
             // Add the checkpoint collider to the lookup dictionary
             checkpointTrackDictionary.Add(track.checkpointCollider, track);
         }
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <returns></returns>
+    private float CalculateTrackDiameter()
+    {
+        float maxDistance = 0f;
+
+        foreach (Track track in Tracks)
+        {
+            // Calculate the distance from the start position to the track piece
+            float distance = Vector3.Distance(track.transform.position, StartPosition.position);
+
+            // Update the maximum distance if needed
+            if (distance > maxDistance)
+            {
+                maxDistance = distance;
+            }
+        }
+
+        // Diameter is twice the maximum distance from the start position
+        float diameter = maxDistance * 2f;
+
+        return diameter;
     }
 
     /// <summary>
