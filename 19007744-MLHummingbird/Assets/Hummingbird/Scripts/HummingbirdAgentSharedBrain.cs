@@ -4,8 +4,14 @@ using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
 
-public class HummingbirdAgent : Agent
+public class HummingbirdAgentSharedBrain : Agent
 {
+    [Header("Kart Related Variables")]
+    public float maxSpeed = 8.0f;
+    public float steeringStrength = 3.0f;
+
+    [Space]
+
     [Tooltip("Force to apply when moving")]
     public float moveForce = 2f;
 
@@ -25,7 +31,7 @@ public class HummingbirdAgent : Agent
     public bool trainingMode;
 
     // The rigidbody of the agent
-    new private Rigidbody rigidbody;
+    new private Rigidbody _rigidbody;
 
     // The flower area that the agent is in
     private FlowerArea flowerArea;
@@ -58,7 +64,7 @@ public class HummingbirdAgent : Agent
     /// </summary>
     public override void Initialize()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        _rigidbody = GetComponent<Rigidbody>();
         flowerArea = GetComponentInParent<FlowerArea>();
 
         // if not in training mode, no max step, play forever
@@ -81,8 +87,9 @@ public class HummingbirdAgent : Agent
         NectarObtained = 0f;
 
         // reset movement
-        rigidbody.velocity = Vector3.zero;
-        rigidbody.angularVelocity = Vector3.zero;
+        _rigidbody.velocity = Vector3.zero;
+        _rigidbody.angularVelocity = Vector3.zero;
+        //_rigidbody.rotation = new Quaternion(0f, 0f, 0f, 0f);
 
         // default to spawn in front of flower
         bool inFrontofFlower = true;
@@ -107,46 +114,42 @@ public class HummingbirdAgent : Agent
     /// Called when and action is received from either the player input or the neural network
     ///
     /// vectorAction[i] represents:
-    /// Index 0: move vector x (+1 = right, -1 = left)
-    /// Index 1: move vector y (+1 = up, -1 = down)
-    /// Index 2: move vector z (+1 = forward, -1 = backward)
-    /// Index 3: pitch angle (+1 = pitch up, -1 = pitch down)
-    /// Index 4: yaw angle (+1 = turn right, -1 = turn left)
+    /// Index 0: move vector z (+1 = forward, -1 = backward)
+    /// Index 1: move float x (+1 = turn right, -1 = turn left)
+    /// Index 2: pitch angle (+1 = pitch up, -1 = pitch down)
     /// </summary>
     /// <param name="actions">The actions to take</param>
     ///
     public override void OnActionReceived(ActionBuffers actions)
     {
-        // Don't take actions if frozen
+        // Don't take actions if frozen.
         if (frozen) return;
 
-        // Calculate movement vector
-        Vector3 move = new Vector3(actions.ContinuousActions[0], actions.ContinuousActions[1], actions.ContinuousActions[2]);
+        // Get input for acceleration, steering and pitch from neural network.
+        float moveInput = actions.ContinuousActions[0];
+        float turnInput = actions.ContinuousActions[1];
+        float pitchChange = actions.ContinuousActions[2];
 
-        // Add force in the direction of the move vector
-        rigidbody.AddForce(move * moveForce);
+        /*// Apply steering
+        Quaternion turn = Quaternion.Euler(0, turnInput * steeringStrength, 0);
+        _rigidbody.MoveRotation(_rigidbody.rotation * turn);*/
 
-        // Get the current rotation
-        Vector3 rotationVector = transform.rotation.eulerAngles;
+        // Apply steering and pitch
+        Quaternion turn = Quaternion.Euler(pitchChange, turnInput * steeringStrength, 0);
+        transform.rotation *= turn;
 
-        // Calculate pitch and yaw rotation
-        float pitchChange = actions.ContinuousActions[3];
-        float yawChange = actions.ContinuousActions[4];
+        // Apply acceleration
+        Vector3 force = transform.forward * moveInput * moveForce;
+        _rigidbody.AddForce(force);
 
-        // Calculate smooth rotation changes
-        smoothPitchChange = Mathf.MoveTowards(smoothPitchChange, pitchChange, 2f * Time.fixedDeltaTime);
-        smoothYawChange = Mathf.MoveTowards(smoothYawChange, yawChange, 2f * Time.fixedDeltaTime);
+        /*Debug.Log($"Move Input: {moveInput}");
+        Debug.Log($"Force: {force}");*/
 
-        // Calculate new pitch and yaw based on smoothed values
-        // Clamp  pitch to avoid flipping upside down
-        float pitch = rotationVector.x + smoothPitchChange * Time.fixedDeltaTime * pitchSpeed;
-        if (pitch > 180f) pitch -= 360f;
-        pitch = Mathf.Clamp(pitch, -MaxPitchAngle, MaxPitchAngle);
-
-        float yaw = rotationVector.y + smoothYawChange * Time.fixedDeltaTime * yawSpeed;
-
-        // Apply the new rotation
-        transform.rotation = Quaternion.Euler(pitch, yaw, 0f);
+        // Limit speed
+        if (_rigidbody.velocity.magnitude > maxSpeed)
+        {
+            _rigidbody.velocity = _rigidbody.velocity.normalized * maxSpeed;
+        }
     }
 
     /// <summary>
@@ -185,6 +188,7 @@ public class HummingbirdAgent : Agent
         // 10 total observations
     }
 
+    /// -------------------------------------- EDITED --------------------------------------///
     /// <summary>
     /// When Behavior Type is set to "Heuristic Only" on the agent's Behavior Parameters,
     /// this function will be called. Its return values will be fed into
@@ -194,45 +198,32 @@ public class HummingbirdAgent : Agent
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         // Create placeholders for all movement/turning
-        Vector3 forward = Vector3.zero;
-        Vector3 left = Vector3.zero;
-        Vector3 up = Vector3.zero;
+        float forward = 0f;
+        Vector3 turnInput = Vector3.zero;
         float pitch = 0f;
-        float yaw = 0f;
 
         // Convert keyboard inputs to movement and turning
         // All values should be between -1 and +1
 
-        // Forward/backward
-        if (Input.GetKey(KeyCode.W)) forward = transform.forward;
-        else if (Input.GetKey(KeyCode.S)) forward = -transform.forward;
+        if (Input.GetKey(KeyCode.W)) forward = 1f; // Move forward
+        else if (Input.GetKey(KeyCode.S)) forward = -1f; // Move backward
 
-        // Left/right
-        if (Input.GetKey(KeyCode.A)) left = -transform.right;
-        else if (Input.GetKey(KeyCode.D)) left = transform.right;
-
-        // Up/down
-        if (Input.GetKey(KeyCode.E)) up = transform.up;
-        else if (Input.GetKey(KeyCode.C)) up = -transform.up;
+        // Turn left/right
+        if (Input.GetKey(KeyCode.LeftArrow)) turnInput.y = -1f; // Turn left
+        else if (Input.GetKey(KeyCode.RightArrow)) turnInput.y = 1f; // Turn right
 
         // Pitch up/down
         if (Input.GetKey(KeyCode.UpArrow)) pitch = 1f;
         else if (Input.GetKey(KeyCode.DownArrow)) pitch = -1f;
 
-        // Turn left/right
-        if (Input.GetKey(KeyCode.LeftArrow)) yaw = -1f;
-        else if (Input.GetKey(KeyCode.RightArrow)) yaw = 1f;
-
-        // Combine the movement vectors and normalize
-        Vector3 combined = (forward + left + up).normalized;
+        Debug.Log(transform.forward);
+        //Debug.Log(forward.magnitude);
 
         // Add the 3 movement values, pitch, and yaw to the actionsOut array
-        var fsf = actionsOut.ContinuousActions;
-        fsf[0] = combined.x;
-        fsf[1] = combined.y;
-        fsf[2] = combined.z;
-        fsf[3] = pitch;
-        fsf[4] = yaw;
+        var continuousActions = actionsOut.ContinuousActions;
+        continuousActions[0] = forward; //Forward/backward
+        continuousActions[1] = turnInput.y; //Turn left/right
+        continuousActions[2] = pitch; // Pitch up/down
     }
 
 
@@ -243,7 +234,7 @@ public class HummingbirdAgent : Agent
     {
         Debug.Assert(trainingMode == false, "Freeze/Unfreeze not supported in training");
         frozen = true;
-        rigidbody.Sleep();
+        _rigidbody.Sleep();
     }
 
     /// <summary>
@@ -253,7 +244,7 @@ public class HummingbirdAgent : Agent
     {
         Debug.Assert(trainingMode == false, "Freeze/Unfreeze not supported in training");
         frozen = false;
-        rigidbody.WakeUp();
+        _rigidbody.WakeUp();
     }
 
     /// <summary>
@@ -315,8 +306,8 @@ public class HummingbirdAgent : Agent
         Debug.Assert(safePositionFound, "Could not find a safe position to spawn");
 
         // Set the position and rotation
-        transform.position = potentialPosition;
-        transform.rotation = potentialRotation;
+        //transform.position = potentialPosition;
+        //transform.rotation = potentialRotation;
     }
 
     /// <summary>

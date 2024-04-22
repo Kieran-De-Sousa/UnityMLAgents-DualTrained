@@ -132,6 +132,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2568295181285028451, guid: 423815a9aec87fb48bbb6f0f35a66653,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4420374660899403437, guid: 423815a9aec87fb48bbb6f0f35a66653,
         type: 3}
       propertyPath: m_Name
@@ -140,7 +145,17 @@ PrefabInstance:
     - target: {fileID: 4420374660899403437, guid: 423815a9aec87fb48bbb6f0f35a66653,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5227812465203542851, guid: 423815a9aec87fb48bbb6f0f35a66653,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.663
+      objectReference: {fileID: 0}
+    - target: {fileID: 5227812465203542851, guid: 423815a9aec87fb48bbb6f0f35a66653,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.144
       objectReference: {fileID: 0}
     - target: {fileID: 8703149456917459529, guid: 423815a9aec87fb48bbb6f0f35a66653,
         type: 3}
@@ -192,9 +207,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9139970118909299024, guid: 423815a9aec87fb48bbb6f0f35a66653,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 8703149456917459529, guid: 423815a9aec87fb48bbb6f0f35a66653,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2079575658}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 423815a9aec87fb48bbb6f0f35a66653, type: 3}
 --- !u!1001 &254574485
@@ -209,6 +233,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Track4
+      objectReference: {fileID: 0}
+    - target: {fileID: 207824527721892173, guid: 0fcddd489715bec4b985cc406437fbb6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1292817627552328570, guid: 0fcddd489715bec4b985cc406437fbb6,
         type: 3}
@@ -288,6 +317,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Track7
       objectReference: {fileID: 0}
+    - target: {fileID: 207824527721892173, guid: 0fcddd489715bec4b985cc406437fbb6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1292817627552328570, guid: 0fcddd489715bec4b985cc406437fbb6,
         type: 3}
       propertyPath: m_BrainParameters.VectorObservationSize
@@ -366,6 +400,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Track1
       objectReference: {fileID: 0}
+    - target: {fileID: 207824527721892173, guid: 0fcddd489715bec4b985cc406437fbb6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1292817627552328570, guid: 0fcddd489715bec4b985cc406437fbb6,
         type: 3}
       propertyPath: m_Model
@@ -376,6 +415,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_BrainParameters.VectorObservationSize
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2368036007582355397, guid: 0fcddd489715bec4b985cc406437fbb6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2884542429539547260, guid: 0fcddd489715bec4b985cc406437fbb6,
         type: 3}
@@ -461,6 +505,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Track9
       objectReference: {fileID: 0}
+    - target: {fileID: 207824527721892173, guid: 0fcddd489715bec4b985cc406437fbb6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1292817627552328570, guid: 0fcddd489715bec4b985cc406437fbb6,
         type: 3}
       propertyPath: m_BrainParameters.VectorObservationSize
@@ -538,6 +587,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Track5
+      objectReference: {fileID: 0}
+    - target: {fileID: 207824527721892173, guid: 0fcddd489715bec4b985cc406437fbb6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1292817627552328570, guid: 0fcddd489715bec4b985cc406437fbb6,
         type: 3}
@@ -617,6 +671,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Track6
       objectReference: {fileID: 0}
+    - target: {fileID: 207824527721892173, guid: 0fcddd489715bec4b985cc406437fbb6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1292817627552328570, guid: 0fcddd489715bec4b985cc406437fbb6,
         type: 3}
       propertyPath: m_BrainParameters.VectorObservationSize
@@ -682,6 +741,79 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0fcddd489715bec4b985cc406437fbb6, type: 3}
+--- !u!1001 &1129762463
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1360474642}
+    m_Modifications:
+    - target: {fileID: 3631165880402229741, guid: 5f0a86f62184b0849a8bbf5a14ea5740,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6434798618752004301, guid: 5f0a86f62184b0849a8bbf5a14ea5740,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.998
+      objectReference: {fileID: 0}
+    - target: {fileID: 6434798618752004301, guid: 5f0a86f62184b0849a8bbf5a14ea5740,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.719
+      objectReference: {fileID: 0}
+    - target: {fileID: 6434798618752004301, guid: 5f0a86f62184b0849a8bbf5a14ea5740,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6434798618752004301, guid: 5f0a86f62184b0849a8bbf5a14ea5740,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6434798618752004301, guid: 5f0a86f62184b0849a8bbf5a14ea5740,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6434798618752004301, guid: 5f0a86f62184b0849a8bbf5a14ea5740,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6434798618752004301, guid: 5f0a86f62184b0849a8bbf5a14ea5740,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6434798618752004301, guid: 5f0a86f62184b0849a8bbf5a14ea5740,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6434798618752004301, guid: 5f0a86f62184b0849a8bbf5a14ea5740,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6434798618752004301, guid: 5f0a86f62184b0849a8bbf5a14ea5740,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8005050037668528862, guid: 5f0a86f62184b0849a8bbf5a14ea5740,
+        type: 3}
+      propertyPath: m_Name
+      value: Hummingbird (Shared Brain)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5f0a86f62184b0849a8bbf5a14ea5740, type: 3}
 --- !u!1001 &1302229131
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -694,6 +826,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Track2
+      objectReference: {fileID: 0}
+    - target: {fileID: 207824527721892173, guid: 0fcddd489715bec4b985cc406437fbb6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1292817627552328570, guid: 0fcddd489715bec4b985cc406437fbb6,
         type: 3}
@@ -760,6 +897,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0fcddd489715bec4b985cc406437fbb6, type: 3}
+--- !u!4 &1360474642 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8703149456917459529, guid: 423815a9aec87fb48bbb6f0f35a66653,
+    type: 3}
+  m_PrefabInstance: {fileID: 92285162}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1423435398
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -772,6 +915,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Track3
+      objectReference: {fileID: 0}
+    - target: {fileID: 207824527721892173, guid: 0fcddd489715bec4b985cc406437fbb6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1292817627552328570, guid: 0fcddd489715bec4b985cc406437fbb6,
         type: 3}
@@ -850,6 +998,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Track8
+      objectReference: {fileID: 0}
+    - target: {fileID: 207824527721892173, guid: 0fcddd489715bec4b985cc406437fbb6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1292817627552328570, guid: 0fcddd489715bec4b985cc406437fbb6,
         type: 3}
@@ -1177,6 +1330,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1271967532386690351}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &2079575658 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6434798618752004301, guid: 5f0a86f62184b0849a8bbf5a14ea5740,
+    type: 3}
+  m_PrefabInstance: {fileID: 1129762463}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1271967532386690351
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1189,6 +1348,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Track0 (Hummingbird Brain)
+      objectReference: {fileID: 0}
+    - target: {fileID: 207824527721892173, guid: 0fcddd489715bec4b985cc406437fbb6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1292817627552328570, guid: 0fcddd489715bec4b985cc406437fbb6,
         type: 3}
@@ -1379,6 +1543,11 @@ PrefabInstance:
     - target: {fileID: 4234784305982538700, guid: 066e0433bdd4285429d217736cae36eb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6603065866098749387, guid: 066e0433bdd4285429d217736cae36eb,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
