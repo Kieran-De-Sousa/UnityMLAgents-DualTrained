@@ -10,6 +10,8 @@ TagManager:
   - track_piece
   - checkpoint
   - wall
+  - objective
+  - obstacle
   layers:
   - Default
   - TransparentFX

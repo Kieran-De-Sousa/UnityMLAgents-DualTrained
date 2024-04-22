@@ -181,12 +181,13 @@ public class KartAgentSharedBrain : Agent
     /// <param name="actionsOut">And output action array</param>
     public override void Heuristic(in ActionBuffers actionsOut)
     {
-        // TODO: Need 5 CONTINUOUS ACTIONS TO MATCH HUMMINGBIRD
+        // TODO: Need 3 CONTINUOUS ACTIONS TO MATCH HUMMINGBIRD
         // TODO: CURRENTLY [2]
 
         // Create placeholders for all movement/turning
         Vector3 forward = Vector3.zero;
         Vector3 turnInput = Vector3.zero;
+        // TODO: NEW ACTION
 
         // Convert keyboard inputs to movement and turning
         // All values should be between -1 and +1
@@ -258,7 +259,7 @@ public class KartAgentSharedBrain : Agent
     private void OnTriggerEnter(Collider other)
     {
         // Check if agent has collided with checkpoint.
-        if (other.CompareTag("checkpoint"))
+        if (other.CompareTag("objective"))
         {
             // Look up the track piece from this checkpoint collider.
             Track track = _raceTrack.GetTrackPieceFromCheckpointCollider(other);
@@ -315,7 +316,7 @@ public class KartAgentSharedBrain : Agent
     /// <param name="other">The collision info.</param>
     private void OnCollisionEnter(Collision other)
     {
-        if (other.collider.CompareTag("wall"))
+        if (other.collider.CompareTag("obstacle"))
         {
             // Collided with the walls of track, give a negative reward.
             _currentReward -= 0.5f;

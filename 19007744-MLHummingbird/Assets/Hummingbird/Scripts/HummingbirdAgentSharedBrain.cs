@@ -9,17 +9,10 @@ public class HummingbirdAgentSharedBrain : Agent
     [Header("Kart Related Variables")]
     public float maxSpeed = 8.0f;
     public float steeringStrength = 3.0f;
+    [Tooltip("Force to apply when moving")]
+    public float acceleration = 2.0f;
 
     [Space]
-
-    [Tooltip("Force to apply when moving")]
-    public float moveForce = 2f;
-
-    [Tooltip("Speed to pitch up or down")]
-    public float pitchSpeed = 100f;
-
-    [Tooltip("Speed to rotate around the up axis")]
-    public float yawSpeed = 100f;
 
     [Tooltip("Transform at the tip of the beak")]
     public Transform beakTip;
@@ -69,7 +62,9 @@ public class HummingbirdAgentSharedBrain : Agent
 
         // if not in training mode, no max step, play forever
         if (!trainingMode)
+        {
             MaxStep = 0;
+        }
     }
 
     /// <summary>
@@ -77,11 +72,6 @@ public class HummingbirdAgentSharedBrain : Agent
     /// </summary>
     public override void OnEpisodeBegin()
     {
-       if (trainingMode)
-        {
-            // only reset flowers in training once
-
-        }
         flowerArea.ResetFlowers();
         // reset nectar
         NectarObtained = 0f;
@@ -89,11 +79,11 @@ public class HummingbirdAgentSharedBrain : Agent
         // reset movement
         _rigidbody.velocity = Vector3.zero;
         _rigidbody.angularVelocity = Vector3.zero;
-        //_rigidbody.rotation = new Quaternion(0f, 0f, 0f, 0f);
 
         // default to spawn in front of flower
         bool inFrontofFlower = true;
-        if(trainingMode)
+
+        if (trainingMode)
         {
             //spawn 50% time front of flower
             inFrontofFlower = UnityEngine.Random.value > .5f;
@@ -110,6 +100,8 @@ public class HummingbirdAgentSharedBrain : Agent
     {
         UpdateNearestFlower();
     }
+
+    /// -------------------------------------- EDITED --------------------------------------///
     /// <summary>
     /// Called when and action is received from either the player input or the neural network
     ///
@@ -119,7 +111,6 @@ public class HummingbirdAgentSharedBrain : Agent
     /// Index 2: pitch angle (+1 = pitch up, -1 = pitch down)
     /// </summary>
     /// <param name="actions">The actions to take</param>
-    ///
     public override void OnActionReceived(ActionBuffers actions)
     {
         // Don't take actions if frozen.
@@ -130,20 +121,13 @@ public class HummingbirdAgentSharedBrain : Agent
         float turnInput = actions.ContinuousActions[1];
         float pitchChange = actions.ContinuousActions[2];
 
-        /*// Apply steering
-        Quaternion turn = Quaternion.Euler(0, turnInput * steeringStrength, 0);
-        _rigidbody.MoveRotation(_rigidbody.rotation * turn);*/
-
         // Apply steering and pitch
         Quaternion turn = Quaternion.Euler(pitchChange, turnInput * steeringStrength, 0);
         transform.rotation *= turn;
 
         // Apply acceleration
-        Vector3 force = transform.forward * moveInput * moveForce;
+        Vector3 force = transform.forward * moveInput * acceleration;
         _rigidbody.AddForce(force);
-
-        /*Debug.Log($"Move Input: {moveInput}");
-        Debug.Log($"Force: {force}");*/
 
         // Limit speed
         if (_rigidbody.velocity.magnitude > maxSpeed)
@@ -216,9 +200,6 @@ public class HummingbirdAgentSharedBrain : Agent
         if (Input.GetKey(KeyCode.UpArrow)) pitch = 1f;
         else if (Input.GetKey(KeyCode.DownArrow)) pitch = -1f;
 
-        Debug.Log(transform.forward);
-        //Debug.Log(forward.magnitude);
-
         // Add the 3 movement values, pitch, and yaw to the actionsOut array
         var continuousActions = actionsOut.ContinuousActions;
         continuousActions[0] = forward; //Forward/backward
@@ -254,7 +235,6 @@ public class HummingbirdAgentSharedBrain : Agent
     /// <param name="inFrontOfFlower">Whether to choose a spot in front of a flower</param>
     private void MoveToSafeRandomPosition(bool inFrontOfFlower)
     {
-
         bool safePositionFound = false;
         int attemptsRemaining = 100; // Prevent an infinite loop
         Vector3 potentialPosition = Vector3.zero;
@@ -306,8 +286,8 @@ public class HummingbirdAgentSharedBrain : Agent
         Debug.Assert(safePositionFound, "Could not find a safe position to spawn");
 
         // Set the position and rotation
-        //transform.position = potentialPosition;
-        //transform.rotation = potentialRotation;
+        transform.position = potentialPosition;
+        transform.rotation = potentialRotation;
     }
 
     /// <summary>
@@ -343,39 +323,20 @@ public class HummingbirdAgentSharedBrain : Agent
     /// <param name="other">The trigger collider</param>
     private void OnTriggerEnter(Collider other)
     {
-        TriggerEnterOrStay(other);
-    }
-
-    /// <summary>
-    /// Called when the agent's collider stays in a trigger collider
-    /// </summary>
-    /// <param name="other">The trigger collider</param>
-    private void OnTriggerStay(Collider other)
-    {
-        TriggerEnterOrStay(other);
-    }
-
-    /// <summary>
-    /// Handles when the agent's collider enters or stays in a trigger collider
-    /// </summary>
-    /// <param name="collider">The trigger collider</param>
-    private void TriggerEnterOrStay(Collider collider)
-    {
         // Check if agent is colliding with nectar
-        if (collider.CompareTag("nectar"))
+        if (other.CompareTag("objective"))
         {
-            Vector3 closestPointToBeakTip = collider.ClosestPoint(beakTip.position);
+            Vector3 closestPointToBeakTip = other.ClosestPoint(beakTip.position);
 
             // Check if the closest collision point is close to the beak tip
             // Note: a collision with anything but the beak tip should not count
             if (Vector3.Distance(beakTip.position, closestPointToBeakTip) < BeakTipRadius)
             {
                 // Look up the flower for this nectar collider
-                Flower flower = flowerArea.GetFlowerFromNectar(collider);
+                Flower flower = flowerArea.GetFlowerFromNectar(other);
 
-                // Attempt to take .01 nectar
-                // Note: this is per fixed timestep, meaning it happens every .02 seconds, or 50x per second
-                float nectarReceived = flower.Feed(.01f);
+                // Attempt to take all the nectar from the flower
+                float nectarReceived = flower.Feed(flower.NectarAmount);
 
                 // Keep track of nectar obtained
                 NectarObtained += nectarReceived;
@@ -394,7 +355,19 @@ public class HummingbirdAgentSharedBrain : Agent
                 }
             }
         }
+
     }
+
+    // ----------------- REMOVED TO BE MORE IN LINE WITH KART ----------------- ///
+    /*/// <summary>
+    /// Called when the agent's collider stays in a trigger collider
+    /// </summary>
+    /// <param name="other">The trigger collider</param>
+    private void OnTriggerStay(Collider other)
+    {
+        TriggerEnterOrStay(other);
+    }*/
+    // ----------------- REMOVED TO BE MORE IN LINE WITH KART ----------------- ///
 
     /// <summary>
     /// Called when the agent collides with something solid
@@ -402,7 +375,7 @@ public class HummingbirdAgentSharedBrain : Agent
     /// <param name="collision">The collision info</param>
     private void OnCollisionEnter(Collision collision)
     {
-        if (trainingMode && collision.collider.CompareTag("boundary"))
+        if (trainingMode && collision.collider.CompareTag("obstacle"))
         {
             // Collided with the area boundary, give a negative reward
             AddReward(-.5f);
