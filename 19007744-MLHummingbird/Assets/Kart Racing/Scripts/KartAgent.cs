@@ -168,7 +168,6 @@ public class KartAgent : Agent
         // (+1 means that the kart is pointing directly at the checkpoint, -1 means directly away)
         sensor.AddObservation(Vector3.Dot(kartTip.forward.normalized, -_nearestTrackPiece.CheckpointForwardVector.normalized));
 
-        // NOTE: UNCOMMENT OUT WHEN RETRAINING
         // (1 observation)
         // Observe the relative distance from the kart tip to the checkpoint.
         sensor.AddObservation(toCheckpoint.magnitude / _raceTrack.TrackDiameter);

@@ -16,6 +16,8 @@ public class Track : MonoBehaviour
     [Tooltip("The reward to be given for hitting the checkpoint.")]
     public float checkpointValue = 0.1f;
 
+    public Collider CheckpointCollider => checkpointCollider;
+
     /// <summary>
     /// A vector pointing forward from the checkpoint.
     /// </summary>
