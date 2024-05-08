@@ -723,9 +723,7 @@ MonoBehaviour:
   MaxStep: 5000
   maxSpeed: 8
   steeringStrength: 3
-  moveForce: 2
-  pitchSpeed: 100
-  yawSpeed: 100
+  acceleration: 2
   beakTip: {fileID: 749827769155012578}
   agentCamera: {fileID: 4657112597962326291}
   trainingMode: 1
