@@ -5,7 +5,7 @@ using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
 
-public class KartAgent : Agent
+public class KartAgentSharedBrain : Agent
 {
     [Header("Kart Stats")]
     public float maxSpeed = 8.0f;
@@ -108,6 +108,7 @@ public class KartAgent : Agent
     /// vectorAction[i] represents:
     /// Index 0: move vector z (+1 = forward, -1 = backward)
     /// Index 1: move float x (+1 = turn right, -1 = turn left)
+    /// Index 2: Padded input (to match Hummingbird)
     /// </summary>
     /// <param name="vectorAction">The actions to take</param>
     ///
@@ -119,6 +120,9 @@ public class KartAgent : Agent
         // Get input for acceleration and steering from neural network
         float moveInput = actions.ContinuousActions[0];
         float turnInput = actions.ContinuousActions[1];
+
+        // Pad input with non-action.
+        float paddedInput = actions.ContinuousActions[2]; // -------- PADDED INPUT --------
 
         // Apply acceleration
         Vector3 force = transform.forward * moveInput * acceleration;
@@ -181,12 +185,12 @@ public class KartAgent : Agent
     /// <param name="actionsOut">And output action array</param>
     public override void Heuristic(in ActionBuffers actionsOut)
     {
-        // TODO: Need 5 CONTINUOUS ACTIONS TO MATCH HUMMINGBIRD
-        // TODO: CURRENTLY [2]
-
         // Create placeholders for all movement/turning
         float forward = 0f;
         Vector3 turnInput = Vector3.zero;
+
+        // -------- PADDED INPUT --------
+        float paddedInput = 0f;
 
         // Convert keyboard inputs to movement and turning
         // All values should be between -1 and +1
@@ -199,10 +203,13 @@ public class KartAgent : Agent
         if (Input.GetKey(KeyCode.A)) turnInput.y = -1f; // Turn left
         else if (Input.GetKey(KeyCode.D)) turnInput.y = 1f; // Turn right
 
+        Debug.Log(forward);
+
         // Add the movement and turning values to the actionsOut array
         var continuousActions = actionsOut.ContinuousActions;
         continuousActions[0] = forward; // Forward/backward
         continuousActions[1] = turnInput.y; // Turn left/right
+        continuousActions[2] = paddedInput; // -------- PADDED INPUT --------
     }
 
 
@@ -258,7 +265,7 @@ public class KartAgent : Agent
     private void OnTriggerEnter(Collider other)
     {
         // Check if agent has collided with checkpoint.
-        if (other.CompareTag("checkpoint"))
+        if (other.CompareTag("objective"))
         {
             // Look up the track piece from this checkpoint collider.
             Track track = _raceTrack.GetTrackPieceFromCheckpointCollider(other);
@@ -280,8 +287,6 @@ public class KartAgent : Agent
                 if (trainingMode)
                 {
                     // Calculate reward for hitting a checkpoint
-                    // TODO: HIGHER REWARD FOR HIGHER FORWARD SPEED!
-
                     // Add reward by multiplying number of checkpoints reached by the value of all checkpoints combined.
                     AddReward(CheckpointsValue * TotalCheckpointsReached);
                 }
@@ -315,7 +320,7 @@ public class KartAgent : Agent
     /// <param name="other">The collision info.</param>
     private void OnCollisionEnter(Collision other)
     {
-        if (other.collider.CompareTag("wall"))
+        if (other.collider.CompareTag("obstacle"))
         {
             // Collided with the walls of track, give a negative reward.
             _currentReward -= 0.5f;
