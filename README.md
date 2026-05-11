@@ -9,8 +9,8 @@ This project highlighted the effectiveness of individual reinforcement learning 
 - Shared-brain Trained Machine Learning Agents
 
 ## Video
-[![Unity Asset Validator Demo Showcase](https://img.youtube.com/vi/KatZJ57OQkg/0.jpg)](https://www.youtube.com/watch?v=KatZJ57OQkg)
-
+[![Unity Asset Validator Demo Showcase](<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/8818e6d6-b06c-4321-9768-d0c5b71da03a" />
+)](https://youtu.be/KatZJ57OQkg?si=yDPvG0XHLdpOi7DK&t=370)
 ## Screenshots
 <img width="1920" height="1080" alt="Multi-Game Machine Learning01" src="https://github.com/user-attachments/assets/1502541d-0efa-49fb-b3c6-71df792f1dd0" />
 <br>
