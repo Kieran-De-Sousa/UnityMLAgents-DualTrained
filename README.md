@@ -24,8 +24,8 @@ Hummingbird simulation. 1.) Flower reward. 2.) Hummingbird agent.
 ___
 <img width="1920" height="1080" alt="Multi-Game Machine Learning03" src="https://github.com/user-attachments/assets/789e9884-2217-46ca-aebb-a391f4762912" />
 Karting simulation. 1.) Checkpoint reward. 2.) Kart agent.
+
+
 ___
-
-
 ## Essay
 [Advanced Technologies: Can A Single Machine Learning Agent Play Multiple Different Games?](https://drive.proton.me/urls/S2A1G3ZT24#u6vVaFZfyGvB)
